@@ -34,6 +34,7 @@ export class LinkedList {
 
     constructor() {
         this.head = null
+        this.tail = null
         this.size = 0
     }
 
@@ -48,14 +49,14 @@ export class LinkedList {
         // list is empty
         if (!this.head) {
             this.head = node
+            this.tail = node
             return
         }
-        
-        let current = this.head
-        while (current.next) {
-            current = current.next
-        }
-        current.next = node
+
+        // add to end
+        this.tail!.next = node
+        node.prev = this.tail
+        this.tail = node
     }
 
     /**
@@ -72,7 +73,7 @@ export class LinkedList {
         }
 
         // remove head
-        if (this.head.data === data) {
+        if (JSON.stringify(this.head.data) === JSON.stringify(data)) {
             this.head = this.head.next
             console.log('LOG: Removed head')
             return true
@@ -81,7 +82,7 @@ export class LinkedList {
         // remove from middle or end
         let current = this.head
         while (current.next) {
-            if (current.next.data === data) {
+            if (JSON.stringify(current.next.data) === JSON.stringify(data)) {
                 current.next = current.next.next
                 console.log('LOG: Removed node')
                 return true
@@ -104,7 +105,6 @@ export class LinkedList {
             data.push(current.data)
             current = current.next
         }
-        console.log('----------------------------------')
         console.log(data)
         console.log('Size:', this.size)
         console.log('----------------------------------')
@@ -171,6 +171,7 @@ export class LinkedList {
 }
 
 let list = new LinkedList()
+console.log('1. Add properties to the list')
 list.add({
     id: 4234,
     name: 'John',
@@ -185,20 +186,37 @@ list.add({
 })
 list.display()
 
+console.log('2. Remove properties from the list \n')
 list.remove({
     id: 4234,
     name: 'John',
 })
 list.display()
 
-list.find({
-    id: 3,
-    name: 'Joe',
-})
+// console.log('3. Find properties in the list')
+// list.find({
+//     id: 3,
+//     name: 'Joe',
+// })
 
+console.log('4. Reverse the list \n')
 list.reverse()
 list.display()
 
+console.log('5. Iterate over the list \n')
 for (let user of list) {
     console.log('Iterator:', user)
 }
+
+console.log('----------------------------------')
+console.log('6. Accessing head and next properties \n')
+console.log('head + 0', list.head?.data)
+console.log('head + 1', list.head?.next?.data)
+console.log('head + 2', list.head?.next?.next?.data)
+console.log('----------------------------------')
+console.log('7. Accessing tail and prev properties \n')
+console.log('tail - 0', list.tail?.data)
+console.log('tail - 1', list.tail?.prev?.data)
+console.log('tail - 2', list.tail?.prev?.prev?.data)
+console.log('tail - 2', list.tail?.prev?.prev)
+console.log('----------------------------------')
