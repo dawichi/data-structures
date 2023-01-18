@@ -72,9 +72,20 @@ export class LinkedList {
             return false
         }
 
+        // remove tail
+        if (JSON.stringify(this.tail!.data) === JSON.stringify(data)) {
+            this.tail = this.tail!.prev
+            this.tail!.next = null
+            this.size--
+            console.log('LOG: Removed tail')
+            return true
+        }
+
         // remove head
         if (JSON.stringify(this.head.data) === JSON.stringify(data)) {
             this.head = this.head.next
+            this.head!.prev = null
+            this.size--
             console.log('LOG: Removed head')
             return true
         }
@@ -84,6 +95,7 @@ export class LinkedList {
         while (current.next) {
             if (JSON.stringify(current.next.data) === JSON.stringify(data)) {
                 current.next = current.next.next
+                current.next!.prev = current
                 console.log('LOG: Removed node')
                 return true
             }
@@ -118,8 +130,8 @@ export class LinkedList {
     find(data: User): ListNode | null {
         let current = this.head
         while (current) {
-            if (current.data === data) {
-                console.log('LOG: Node found')
+            if (JSON.stringify(current.data) === JSON.stringify(data)) {
+                console.log('LOG: Node found', JSON.stringify(data))
                 return current
             }
             current = current.next
@@ -137,9 +149,14 @@ export class LinkedList {
         let current = this.head
         let prev: ListNode | null = null
         let next: ListNode | null = null
+
+        // swap head and tail
+        this.tail = this.head
+
         while (current) {
             next = current.next
             current.next = prev
+            current.prev = next
             prev = current
             current = next
         }
@@ -171,7 +188,7 @@ export class LinkedList {
 }
 
 let list = new LinkedList()
-console.log('1. Add properties to the list')
+console.log('1. Add properties to the list \n')
 list.add({
     id: 4234,
     name: 'John',
@@ -193,11 +210,11 @@ list.remove({
 })
 list.display()
 
-// console.log('3. Find properties in the list')
-// list.find({
-//     id: 3,
-//     name: 'Joe',
-// })
+console.log('3. Find properties in the list \n')
+list.find({
+    id: 5435,
+    name: 'Joe',
+})
 
 console.log('4. Reverse the list \n')
 list.reverse()
@@ -218,5 +235,4 @@ console.log('7. Accessing tail and prev properties \n')
 console.log('tail - 0', list.tail?.data)
 console.log('tail - 1', list.tail?.prev?.data)
 console.log('tail - 2', list.tail?.prev?.prev?.data)
-console.log('tail - 2', list.tail?.prev?.prev)
 console.log('----------------------------------')
